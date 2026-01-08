@@ -9,42 +9,63 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   updateCurrentIp();
+
+  startPingLoop();
 });
 
-async function updateCurrentIp() {
-  const ipElement = document.querySelector(".current-ip");
-  const countryElement = document.querySelector(".current-country");
-  const pingElement = document.querySelector(".current-ping"); 
+function startPingLoop() {
+  const pingElement = document.querySelector(".current-ping");
 
-  try {
-    // 1. Get IP and Country Data
-    const res = await fetch(`https://ipwho.is/?rand=${Date.now()}`);
-    const data = await res.json();
+  async function performPing() {
+    let pingUrl = "https://www.google.com/generate_204";
+    let targetName = "Google";
 
-    if (data.success) {
-      ipElement.textContent = `Current IP: ${data.ip}`;
-      countryElement.textContent = `Current Country: ${data.country} | ${data.country_code}`;
-      
-      const startTime = performance.now();
-      
-      await fetch("https://www.google.com/generate_204", { 
-        mode: 'no-cors', 
-        cache: 'no-store' 
-      });
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab && tab.url && tab.url.startsWith("http")) {
+        const urlObj = new URL(tab.url);
+        pingUrl = `${urlObj.origin}/favicon.ico`;
+        targetName = urlObj.hostname;
+      }
 
-      const endTime = performance.now();
-      const pingTime = Math.round(endTime - startTime);
+      const start = performance.now();
+      await fetch(`${pingUrl}?t=${Date.now()}`, { mode: 'no-cors', cache: "no-store" });
+      const end = performance.now();
       
-      pingElement.textContent = `Ping to Google: ${pingTime}ms`;
+      const ms = Math.round(end - start);
+      pingElement.textContent = `Ping (${targetName}): ${ms}ms`;
+      
+      if (ms < 150) pingElement.style.color = "#4CAF50";     
+      else if (ms < 400) pingElement.style.color = "#FFC107"; 
+      else pingElement.style.color = "#F44336";               
+
+    } catch (err) {
+      pingElement.textContent = `Ping (${targetName}): Offline`;
+      pingElement.style.color = "#F44336";
     }
-  } catch (error) {
-    ipElement.textContent = "Connection Error";
-    pingElement.textContent = "Ping: ---";
+
+    setTimeout(performPing, 1000);
   }
+
+  performPing();
+}
+
+function updateCurrentIp() {
+  fetch(`https://ipwho.is/?rand=${Date.now()}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.querySelector(".current-ip").textContent = `Current IP: ${data.ip}`;
+        document.querySelector(".current-country").textContent = `Current Country: ${data.country} | ${data.country_code}`;
+      }
+    })
+    .catch(() => {
+      document.querySelector(".current-ip").textContent = "Unable to fetch IP";
+    });
 }
 
 function updateButtonVisuals(btn, isConnected) {
-  btn.textContent = isConnected ? "Disconnect" : "Connect";
+  btn.textContent = isConnected ? "DISCONNECT" : "CONNECT";
   btn.className = isConnected ? "connected" : "disconnected"; 
 }
 

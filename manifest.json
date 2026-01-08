@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "HProxie",
   "description": "Bring your own proxy to your browser.",
-  "version": "1.3",
+  "version": "1.4",
   "icons": {
     "64": "images/icon64.png"
   },

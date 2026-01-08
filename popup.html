@@ -3,6 +3,7 @@
 
 <head>
   <title>HProxie</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
   <style>
     body {
       width: 250px;
@@ -13,6 +14,8 @@
       justify-content: center;
       text-align: center;
       box-sizing: border-box;
+      background-color: #111111;
+      color: white;
     }
 
     input {
@@ -20,23 +23,28 @@
       margin-bottom: 10px;
       padding: 8px;
       box-sizing: border-box;
-      text-align: center;
+      text-align: left;
+      border-radius: 10px;
+      font-weight: bolder;
     }
 
     button {
       width: 100%;
       padding: 10px;
       border: none;
+      border-radius: 10px;
       color: white;
       cursor: pointer;
       margin-top: 5px;
+      font-family: "Sofia", sans-serif;
+      font-weight: bolder;
     }
 
-    .connected{
+    .connected {
       background-color: rgb(150, 27, 27);
     }
 
-    .disconnected{
+    .disconnected {
       background-color: rgb(82, 223, 117);
     }
 
@@ -49,9 +57,23 @@
       text-decoration: underline;
     }
 
-    p{
+    p {
       padding: 0;
       margin: 5px;
+    }
+
+    h1 {
+      font-family: "Sofia", sans-serif;
+      font-weight: bolder;
+      font-size: 300%;
+      margin: 0;
+    }
+
+    .current-stuff {
+      background-color: rgba(1, 1, 1, 0.5);
+      border-radius: 5px;
+      padding: 5px 10px;
+      color: rgb(192, 192, 192);
     }
   </style>
 </head>
@@ -60,16 +82,17 @@
   <h1>HProxie</h1>
   <input type="text" id="proxy-ip" placeholder="IP Address (e.g. 1.2.3.4)">
   <input type="number" id="proxy-port" placeholder="Port (e.g. 8080)">
-  <button id="toggle-proxy" class="connected">Connect</button>
+  <button id="toggle-proxy" class="connected">CONNECT</button>
   <p>Do not use this extension for illegal activities.</p>
   <p>Check <a href="https://cdn.jsdelivr.net/gh/proxifly/free-proxy-list@main/proxies/protocols/http/data.txt"
-      target="_blank">Here</a> for free proxies.</p>
-  <p>Use a <a href="https://github.com/openproxyspace/unfx-proxy-checker" target="_blank">proxy checker</a> to verify
+      target="_blank">Here</a> for free <span style="text-decoration: underline; "><i>http/s</i></span> proxies.</p>
+  <p>Use a <a href="https://github.com/openproxyspace/unfx-proxy-checker" target="_blank">Proxy Checker</a> to verify
     proxies.</p>
-  <p class="current-ip">Loading IP...</p>
-  <p class="current-country">Loading Country...</p>
-  <div class="current-ping">Ping: --</div>
-
+  <div class="current-stuff">
+    <p class="current-ip">Current IP: Checking...</p>
+    <p class="current-country">Current Country: Checking...</p>
+    <div class="current-ping">Ping: --</div>
+  </div>
   <script src="popup.js"></script>
 </body>
 
